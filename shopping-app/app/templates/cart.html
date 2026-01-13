@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1 class="mb-4">Your Cart</h1>
+
+{% if cart_items %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Price</th>
+            <th>Quantity</th>
+            <th>Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in cart_items %}
+        <tr>
+            <td>{{ item.name }}</td>
+            <td>${{ item.price }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>${{ "%.2f"|format(item.total) }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-end"><strong>Grand Total:</strong></td>
+            <td><strong>${{ "%.2f"|format(grand_total) }}</strong></td>
+        </tr>
+    </tfoot>
+</table>
+<div class="text-end">
+    <a href="/" class="btn btn-secondary">Continue Shopping</a>
+    <button class="btn btn-success">Checkout</button>
+</div>
+{% else %}
+<div class="alert alert-info">
+    Your cart is empty. <a href="/">Go shopping!</a>
+</div>
+{% endif %}
+{% endblock %}

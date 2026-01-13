@@ -1,0 +1,54 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                // Get code from SCM (GitHub, etc.)
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                script {
+                    echo 'Building Docker image...'
+                    // docker.build("shopping-app:${env.BUILD_ID}")
+                    // Assuming Docker is available in the Jenkins environment
+                    sh 'docker build -t shopping-app .'
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    echo 'Running tests...'
+                    // Run tests inside the container or using a python environment
+                    // Here we assume python is installed in the agent or we run inside docker
+                    sh 'docker run --rm shopping-app pytest /app/../tests/test_app.py'  
+                    // Note: In a real scenario, you'd mount the tests or copy them in the Dockerfile.
+                    // For this simple setup, let's assume we run pytest in the workspace if python is there
+                    // OR we modify Dockerfile to verify tests.
+                    
+                    // Better approach for this demo: Install dependencies locally and run pytest
+                    // sh 'pip install -r app/requirements.txt && pytest tests/'
+                }
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                script {
+                    echo 'Running SonarQube Scanner...'
+                    // Requires SonarQube plugin configured in Jenkins
+                    // withSonarQubeEnv('SonarQube Server') {
+                    //    sh 'sonar-scanner'
+                    // }
+                    // Placeholder command for practice
+                    sh 'echo "Simulating SonarQube analysis... needs sonar-scanner installed"'
+                }
+            }
+        }
+    }
+}
